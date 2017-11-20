@@ -267,8 +267,8 @@ class Striker(Process):
             'http://www.bing.com/',
             'http://www.baidu.com/',
             'http://www.yandex.com/',
-            'http://godseye.pw/,
-            'http://yahoo.com/,
+            'http://godseye.pw/',
+            'http://yahoo.com/',
             'http://' + self.host + '/'
             ]
 
